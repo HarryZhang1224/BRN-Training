@@ -92,7 +92,7 @@ def PlayerMove(initial_board):#the actual game itself
             unused_key.remove(int(key))
             print("The computer has made a move.")
         showboard(initial_board)
-        #check win condition(same in a row, same in a column, same in the diagonal), to increase efficiency, we only need to check only after 5 moves
+        #check win condition(same in a row, same in a column, same in the diagonal), to increase efficiency, we only need to check after 5 moves
         if counter>=5:
             if checkwin(initial_board):
                 break
