@@ -47,14 +47,43 @@ def clearboard(board):#cleans the filled board after a game
         i=str(i)
         board[i]='.'
 
+def usertryRow():#helper function to validate row input
+    valid=False
+    while valid==False:
+        try:
+            row = int(input("Please enter row position:"))
+            if row < 4 and row > 0:
+                valid=True
+            else:
+                print("Please enter a positive integer less than or equal to 3")
+        except ValueError:
+            print("Please enter a positive integer less than or equal to 3")
+    return row
 
+def usertryCol():#helper function to validate column input
+    valid=False
+    while valid==False:
+        try:
+            col = int(input("Please enter column position:"))
+            if col < 4 and col > 0:
+                valid=True
+            else:
+                print("Please enter a positive integer less than or equal to 3")
+        except ValueError:
+            print("Please enter a positive integer less than or equal to 3")
+    return col
 
+def usertryRole():#helper function to validate Role input
+    valid=False
+    while valid==False:
+        user = input("Please choose to play as X or O: ")
+        if user=="X" or user=="O":
+            valid=True
+    return user
 
 def PlayerMove(initial_board):#the actual game itself
     Players = ["X", "O"]
-    userRound = input("Please choose to play as X or O:")
-    while userRound!="X" and userRound!="O":
-        userRound = input("Please only enter X or O")
+    userRound = usertryRole()
     Players.remove(userRound)
     ComputerRole = Players[0]
     GameRound = "X"#since X always moves first
@@ -66,33 +95,24 @@ def PlayerMove(initial_board):#the actual game itself
         col = 0
         if GameRound == userRound :#if it is the user's round, prompt for inputs
             print("Player " + userRound + " Please make a move: ")  # first we need to ask the player to move
-            row = int(input("Which row?"))
-            while row > 3 :
-                row = int(input("Row index out of bound, please enter again:"))
-            col = int(input("Which column?"))
-            while col > 3 :
-                col = int(input("Column index out of bound, please enter again:"))
+            row=usertryRow()
+            col=usertryCol()
             key = str((row-1)*3 + col)#the above while loops check for valid row and col inputs
-            if initial_board[key]!='.':
-                row = int(input("Previously chosen spot taken, choose a new spot by first entering row: "))
-                while row > 3:
-                    row = int(input("Row index out of bound, please enter again:"))
-                col = int(input("Then enter column: "))
-                while col > 3:
-                    col = int(input("Column index out of bound, please enter again:"))
+            while initial_board[key]!='.':
+                print("Previously chosen spot taken, choose a new spot by first entering row: ")
+                row=usertryRow()
+                print("Then enter column:")
+                col=usertryCol()
                 key = str((row - 1) * 3 + col)
-                initial_board[key] = userRound
-                unused_key.remove(int(key))#the above control flow prompts for user input when the chosen spot is already taken
-            elif initial_board[key]=='.':
-                initial_board[key] = userRound
-                unused_key.remove(int(key))
+            initial_board[key] = userRound
+            unused_key.remove(int(key))#the above control flow prompts for user input when the chosen spot is already taken
         elif GameRound == ComputerRole:#when it's the computer's round, randomly choose an unused spot
             key = random.choice(unused_key)
             initial_board[str(key)]=ComputerRole
             unused_key.remove(int(key))
             print("The computer has made a move.")
         showboard(initial_board)
-        #check win condition(same in a row, same in a column, same in the diagonal), to increase efficiency, we only need to check after 5 moves
+        #check win condition(same in a row, same in a column, same in the diagonal), to increase efficiency, we only need to check only after 5 moves
         if counter>=5:
             if checkwin(initial_board):
                 break
@@ -107,7 +127,6 @@ def PlayerMove(initial_board):#the actual game itself
     clearboard(initial_board)
 
 PlayerMove(initial_board)
-
 
 
 
